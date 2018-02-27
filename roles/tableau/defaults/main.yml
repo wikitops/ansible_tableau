@@ -1,0 +1,11 @@
+---
+
+tableau_version_major: 10
+tableau_version_minor: 5
+tableau_version_patch: 0
+tableau_deb_package: "tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_amd64.deb"
+tableau_url_deb: "https://downloads.tableau.com/esdalt/{{ tableau_version_major }}.{{ tableau_version_minor }}.{{ tableau_version_patch }}/{{ tableau_deb_package }}"
+
+tsm_packages: "/opt/tableau/tableau_server/packages"
+tsm_data_dir: /opt/tableau/tsm
+tsm_execute_args: "--accepteula"
