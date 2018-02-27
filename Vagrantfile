@@ -11,8 +11,6 @@ Vagrant.configure("2") do |config|
       vb.name = "tableau"
       vb.memory = 8192
       vb.cpus = 2
-      vb.customize [ "createmedium", "disk", "--filename", "tableau.vmdk", "--format", "vmdk", "--size", 1024 * 20 ]
-      vb.customize [ "storageattach", "tableau" , "--storagectl", "IDE Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "tableau.vmdk"]
     end
 
     config.vm.define "tableau0#{i}" do |server|
