@@ -1,0 +1,14 @@
+---
+
+- name: Install Tableau server
+  apt:
+    deb: "{{ tableau_url_deb }}"
+
+- name: Get Tableau TSM version
+  shell: "ls {{ tsm_packages }} | grep scripts"
+  register: tsm
+
+- name: Initialize Tableau TSM
+  command: ./initialize-tsm {{ tsm_execute_args }}
+  args:
+    chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"

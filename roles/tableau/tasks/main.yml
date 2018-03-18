@@ -1,39 +1,26 @@
 ---
 
-- name: Install prerequisities packages
-  apt:
-    name: "{{ item }}"
+- name: Ensure if sudoers is configured correctly
+  lineinfile:
+    path: /etc/sudoers
     state: present
-  with_items:
-    - gdebi-core
+    line: "#includedir /etc/sudoers.d"
 
-- name: Check if Tableau installer exist
-  stat:
-    path: "/tmp/tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_amd64.deb"
-  register: tableau
-
-- block:
-
-  - name: Download Tanleau installer (This operation may take long time)
-    get_url:
-      url: "{{ tableau_url_deb }}"
-      dest: /tmp
-      owner: root
-      group: root
-      mode: 0644
-
-  - name: Install Tableau server
-    command: gdebi -n tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_amd64.deb
-    args:
-      chdir: /tmp
-
-  - name: Get Tableau TSM version
-    shell: "ls {{ tsm_packages }} | grep scripts"
-    register: tsm
-
-  - name: Initialize Tableau TSM
-    command: ./initialize-tsm {{ tsm_execute_args }}
-    args:
-      chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"
-
+- name: Install Tableau Server
+  import_tasks: install.yml
   when: tableau.stat.exists == false
+  tags: install
+
+- name: Manage Tableau Server Admin account
+  import_tasks: user.yml
+  tags: user
+
+- name: Configure Tableau Server
+  import_tasks: config.yml
+  become: true
+  become_user: "{{ tableau_user }}"
+  tags: config
+
+- name: Install Postgresql Tableau ODBC
+  import_tasks: postgresql.yml
+  tags: odbc

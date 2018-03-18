@@ -6,6 +6,34 @@ tableau_version_patch: 0
 tableau_deb_package: "tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_amd64.deb"
 tableau_url_deb: "https://downloads.tableau.com/esdalt/{{ tableau_version_major }}.{{ tableau_version_minor }}.{{ tableau_version_patch }}/{{ tableau_deb_package }}"
 
+tableau_postgresql_odbc_package: tableau-postgresql-odbc_9.5.3_amd64.deb
+tableau_postgresql_odbc_deb: "https://downloads.tableau.com/drivers/linux/deb/tableau-driver/{{ tableau_postgresql_odbc_package }}"
+
+tableau_user: tabadmin
+tableau_password: azertyuiop
+tableau_password_encrypted: "$6$26TGUbrC2UhUN7TC$6yxWcTb4tgJuuR4SQpbV7yEVpSSR092.lKp0kqomaB/MgVmjg7SAfnx/lmkNQytSkWUsxNbNdjYxGyvJX5olE."
+
 tsm_packages: "/opt/tableau/tableau_server/packages"
 tsm_data_dir: /opt/tableau/tsm
 tsm_execute_args: "--accepteula"
+tsm_licence: ""
+tsm_registration:
+  zip: 03079
+  country: USA
+  city: Salem
+  last_name: Smith
+  industry: Software
+  eula: yes
+  title: Software Applications Engineer
+  phone: 5556875309
+  company: Example
+  state: NH
+  department: Engineering
+  first_name: Jason
+  email: jsmith@example.com
+tsm_identity_store_type: local
+
+tsm_deploy_examples: false
+
+tabcmd_admin_username: admin
+tabcmd_admin_password: DhnfIZen3dj3d9s2
