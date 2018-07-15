@@ -9,6 +9,6 @@
   register: tsm
 
 - name: Initialize Tableau TSM
-  command: ./initialize-tsm {{ tsm_execute_args }}
+  command: ./initialize-tsm {{ tsm_execute_args }} -f
   args:
     chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"

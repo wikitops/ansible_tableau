@@ -8,7 +8,6 @@
 
 - name: Install Tableau Server
   import_tasks: install.yml
-  when: tableau.stat.exists == false
   tags: install
 
 - name: Manage Tableau Server Admin account

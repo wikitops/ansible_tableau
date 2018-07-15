@@ -68,3 +68,7 @@ vagrant destroy
 ## Author
 
 Member of Wikitops : https://www.wikitops.io/
+
+## Licence
+
+This project is licensed under MIT license. For the full text of the license, see the LICENSE file.
