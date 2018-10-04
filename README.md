@@ -1,4 +1,5 @@
 # Ansible : Playbook Tableau
+
 The aim of this project is to deploy a simple Tableau instance on Vagrant.
 
 ## Getting Started
@@ -55,11 +56,11 @@ To deploy the Tableau instance, you just have to run the Ansible playbook tablea
 ansible-playbook tableau.yml
 ```
 
-If all run like it is expected, you should  access Tableau Server Web interface : http://10.0.1.31/
+If everything run as expected, you should  access Tableau Server Web interface : http://10.0.1.31/
 
 #### Destroy
 
-To destroy on what Vagrant has created, just run this command :
+To destroy the Vagrant resources created, just run this command :
 
 ```
 vagrant destroy
