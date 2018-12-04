@@ -1,14 +1,22 @@
 ---
 
-- name: Install Tableau server
+- name: TABLEAU INSTALL | Install on Debian environment (This may take some time)
   apt:
     deb: "{{ tableau_url_deb }}"
+    state: present
+  when: ansible_os_family == 'Debian'
 
-- name: Get Tableau TSM version
+- name: TABLEAU INSTALL | Install on RedHat environment (This may take some time)
+  yum:
+    name: "{{ tableau_url_rpm }}"
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: TABLEAU INSTALL | Get Tableau TSM version
   shell: "ls {{ tsm_packages }} | grep scripts"
   register: tsm
 
-- name: Initialize Tableau TSM
+- name: TABLEAU INSTALL | Initialize Tableau TSM
   command: ./initialize-tsm {{ tsm_execute_args }} -f
   args:
     chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"

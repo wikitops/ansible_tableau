@@ -1,5 +1,5 @@
 ---
 
-- name: Install Postgresql Tableau ODBC
+- name: TABLEAU POSTGRES | Install Postgresql Tableau ODBC
   apt:
     deb: "{{ tableau_postgresql_odbc_deb }}"

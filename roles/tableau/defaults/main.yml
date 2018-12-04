@@ -1,18 +1,32 @@
 ---
 
-tableau_version_major: 10
-tableau_version_minor: 5
-tableau_version_patch: 0
+###
+# TABLEAU
+###
+
+# Version
+tableau_version_major: 2018
+tableau_version_minor: 3
+tableau_version_patch: 1
+
+# Debian
 tableau_deb_package: "tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_amd64.deb"
 tableau_url_deb: "https://downloads.tableau.com/esdalt/{{ tableau_version_major }}.{{ tableau_version_minor }}.{{ tableau_version_patch }}/{{ tableau_deb_package }}"
 
+# RedHat
+tableau_rpm_package: "tableau-server-{{ tableau_version_major }}-{{ tableau_version_minor }}-{{ tableau_version_patch }}_x86_64.rpm"
+tableau_url_rpm: "https://downloads.tableau.com/esdalt/{{ tableau_version_major }}.{{ tableau_version_minor }}.{{ tableau_version_patch }}/{{ tableau_rpm_package }}"
+
+# Postgres
 tableau_postgresql_odbc_package: tableau-postgresql-odbc_9.5.3_amd64.deb
 tableau_postgresql_odbc_deb: "https://downloads.tableau.com/drivers/linux/deb/tableau-driver/{{ tableau_postgresql_odbc_package }}"
 
+# User
 tableau_user: tabadmin
 tableau_password: azertyuiop
 tableau_password_encrypted: "$6$26TGUbrC2UhUN7TC$6yxWcTb4tgJuuR4SQpbV7yEVpSSR092.lKp0kqomaB/MgVmjg7SAfnx/lmkNQytSkWUsxNbNdjYxGyvJX5olE."
 
+# Configuration
 tsm_packages: "/opt/tableau/tableau_server/packages"
 tsm_data_dir: /opt/tableau/tsm
 tsm_execute_args: "--accepteula"

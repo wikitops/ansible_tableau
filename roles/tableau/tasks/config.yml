@@ -1,24 +1,24 @@
 ---
 
-- name: Get Tableau Server Manager executable
+- name: TABLEAU CONFIG | Get Tableau Server Manager executable
   shell: "ls {{ tsm_packages }} | grep customer"
   register: tsm
 
-- name: Set facts for Tableau Server Manager executable
+- name: TABLEAU CONFIG | Set facts for Tableau Server Manager executable
   set_fact:
     TSM_EXECUTBALE: "{{ tsm_packages }}/{{ item.stdout }}"
   with_items:
     - "{{ tsm }}"
 
-- name: Set Tableau Server licence
+- name: TABLEAU CONFIG | Set Tableau Server licence
   command: "{{ TSM_EXECUTBALE }}/tsm licenses activate -k {{ tsm_licence }} --username {{ tableau_user }} --password {{ tableau_password }}"
   when: tsm_licence != ""
 
-- name: Get free trial Tableau Server licence
+- name: TABLEAU CONFIG | Get free trial Tableau Server licence
   command: "{{ TSM_EXECUTBALE }}/tsm licenses activate -t --username {{ tableau_user }} --password {{ tableau_password }}"
   when: tsm_licence == ""
 
-- name: Copy Tableau Server registration file
+- name: TABLEAU CONFIG | Copy Tableau Server registration file
   template:
     src: "tmp/tableau_registration_file.json.j2"
     dest: "/tmp/tableau_registration_file.json"
@@ -26,10 +26,10 @@
     group: "{{ tableau_user }}"
     mode: 0644
 
-- name: Register Tableau Server
+- name: TABLEAU CONFIG | Register Tableau Server
   command: "{{ TSM_EXECUTBALE }}/tsm register --file /tmp/tableau_registration_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
 
-- name: Copy Tableau Server identity stores
+- name: TABLEAU CONFIG | Copy Tableau Server identity stores
   template:
     src: "tmp/tableau_identity_file.json.j2"
     dest: "/tmp/tableau_identity_file.json"
@@ -37,20 +37,20 @@
     group: "{{ tableau_user }}"
     mode: 0644
 
-- name: Configure Tableau Server identity stores
+- name: TABLEAU CONFIG | Configure Tableau Server identity stores
   command: "{{ TSM_EXECUTBALE }}/tsm settings import -f /tmp/tableau_identity_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
 
-- name: Configure Tableau Server to not deploy examples
+- name: TABLEAU CONFIG | Configure Tableau Server to not deploy examples
   command: "{{ TSM_EXECUTBALE }}/tsm configuration set -k install.component.samples -v false --username {{ tableau_user }} --password {{ tableau_password }}"
   when: not tsm_deploy_examples
 
-- name: Apply pending changes
-  command: "{{ TSM_EXECUTBALE }}/tsm pending-changes apply -r --username {{ tableau_user }} --password {{ tableau_password }}"
+- name: TABLEAU CONFIG | Apply pending changes
+  command: "{{ TSM_EXECUTBALE }}/tsm pending-changes apply --username {{ tableau_user }} --password {{ tableau_password }}"
 
-- name: Initialize Tableau Server (This may take some time)
+- name: TABLEAU CONFIG | Initialize Tableau Server (This may take some time)
   command: "{{ TSM_EXECUTBALE }}/tsm initialize --start-server --request-timeout 1800 --username {{ tableau_user }} --password {{ tableau_password }}"
   args:
     creates: /tmp/tableau_init.done
 
-- name: Configure Tableau Server administrator user
+- name: TABLEAU CONFIG | Configure Tableau Server administrator user
   command: '{{ TSM_EXECUTBALE }}/tabcmd initialuser --server "localhost:80" --username "{{ tabcmd_admin_username }}" --password "{{ tabcmd_admin_password }}"'
