@@ -73,7 +73,7 @@ $ vagrant provision
 To be able to connect to a Vagrant instance, you should use the CLI which is configured to automatically use the default SSH key :
 
 ```bash
-$ vagrant ssh pip01
+$ vagrant ssh tableau01
 ```
 
 ## Author
