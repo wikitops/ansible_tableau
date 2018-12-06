@@ -1,6 +1,6 @@
 #!/bin/bash
 
-script_dir="{{ TSM_EXECUTBALE }}"
+script_dir="{{ TSM_EXECUTABLE }}"
 cert_dir=$(dirname "$0")
 
 key_file=$(ls "$cert_dir"/*.key | head -n 1)
