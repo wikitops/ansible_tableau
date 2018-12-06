@@ -52,3 +52,6 @@ tsm_deploy_examples: false
 
 tabcmd_admin_username: admin
 tabcmd_admin_password: DhnfIZen3dj3d9s2
+
+# Ssl
+tableau_setup_ssl_helper: false

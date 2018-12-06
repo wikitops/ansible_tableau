@@ -1,0 +1,10 @@
+#!/bin/bash
+
+script_dir="{{ TSM_EXECUTBALE }}"
+cert_dir=$(dirname "$0")
+
+key_file=$(ls "$cert_dir"/*.key | head -n 1)
+crt_file="$cert_dir$(basename "$key_file" .key).crt"
+
+"$script_dir/tsm" security external-ssl enable --username "{{ tableau_user }}" --password "{{ tableau_password }}"  --cert-file "$crt_file" --key-file "$key_file"
+"$script_dir/tsm" pending-changes apply --ignore-prompt enable --username "{{ tableau_user }}" --password "{{ tableau_password }}"
