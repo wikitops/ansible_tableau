@@ -1,4 +1,6 @@
-- name: Create ssl reload helper directory
+---
+
+- name: TABLEAU SSL | Create directory
   file:
     state: directory
     path: /etc/tableaussl
@@ -6,9 +8,9 @@
     group: root
     mode: 0700
 
-- name: Create ssl reload helper
+- name: TABLEAU SSL | Create reload helper
   template:
-    src: ssl_reload_helper
+    src: etc/tableaussl/reload_command.j2
     dest: /etc/tableaussl/reload_command
     owner: root
     group: root

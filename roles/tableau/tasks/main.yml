@@ -8,23 +8,23 @@
 
 - name: TABLEAU | Install Tableau Server
   import_tasks: install.yml
-  tags: install
+  tags: tableau-install
 
 - name: TABLEAU | Manage Tableau Server Admin account
   import_tasks: user.yml
-  tags: user
+  tags: tableau-user
 
 - name: TABLEAU | Configure Tableau Server
   import_tasks: config.yml
   become: true
   become_user: "{{ tableau_user }}"
-  tags: config
+  tags: tableau-config
 
 - name: TABLEAU | Install Postgresql Tableau ODBC
   import_tasks: postgresql.yml
-  tags: odbc
+  tags: tableau-odbc
 
 - name: TABLEAU | Create ssl reload helper
   import_tasks: ssl.yml
-  tags: ssl
+  tags: tableau-ssl
   when: tableau_setup_ssl_helper
