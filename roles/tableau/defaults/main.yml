@@ -21,6 +21,7 @@ tableau_url_rpm: "https://downloads.tableau.com/esdalt/{{ tableau_version_major 
 tableau_postgresql_odbc_package: tableau-postgresql-odbc_9.5.3_amd64.deb
 tableau_postgresql_odbc_deb: "https://downloads.tableau.com/drivers/linux/deb/tableau-driver/{{ tableau_postgresql_odbc_package }}"
 
+tableau_fix_systemd_unit: false
 # User
 tableau_user: tabadmin
 tableau_password: azertyuiop

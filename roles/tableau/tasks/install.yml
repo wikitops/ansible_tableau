@@ -16,6 +16,14 @@
   shell: "ls {{ tsm_packages }} | grep scripts"
   register: tsm
 
+- name: TABLEAU INSTALL | Fix systemd unit
+  lineinfile:
+    path: "{{ tsm_packages }}/{{ tsm.stdout }}/user-at.service"
+    line: Environment=XDG_RUNTIME_DIR=/run/user/%i
+    insertbefore: "^ExecStart="
+    state: present
+  when: tableau_fix_systemd_unit
+
 - name: TABLEAU INSTALL | Initialize Tableau TSM
   command: ./initialize-tsm {{ tsm_execute_args }} -f
   args:
