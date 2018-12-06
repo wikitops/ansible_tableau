@@ -23,3 +23,8 @@
 - name: TABLEAU | Install Postgresql Tableau ODBC
   import_tasks: postgresql.yml
   tags: odbc
+
+- name: TABLEAU | Create ssl reload helper
+  import_tasks: ssl.yml
+  tags: ssl
+  when: tableau_setup_ssl_helper

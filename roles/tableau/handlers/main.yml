@@ -1,10 +1,10 @@
 ---
 
 - name: Start tableau
-  command: "{{ TSM_EXECUTBALE }}/tsm start"
+  command: "{{ TSM_EXECUTABLE }}/tsm start"
 
 - name: Stop tableau
-  command: "{{ TSM_EXECUTBALE }}/tsm stop"
+  command: "{{ TSM_EXECUTABLE }}/tsm stop"
 
 - name: Apply pending changes
-  command: "{{ TSM_EXECUTBALE }}/tsm pending-changes apply -r --username {{ tableau_user }} --password {{ tableau_password }}"
+  command: "{{ TSM_EXECUTABLE }}/tsm pending-changes apply -r --username {{ tableau_user }} --password {{ tableau_password }}"

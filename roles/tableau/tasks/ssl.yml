@@ -1,0 +1,15 @@
+- name: Create ssl reload helper directory
+  file:
+    state: directory
+    path: /etc/tableaussl
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create ssl reload helper
+  template:
+    src: ssl_reload_helper
+    dest: /etc/tableaussl/reload_command
+    owner: root
+    group: root
+    mode: 0700
