@@ -57,9 +57,17 @@
   when:
     - tableau_list_identity_store.stdout_lines | length == 0
 
+- name: TABLEAU CONFIG | Check deploy example status
+  command: "{{ TSM_EXECUTABLE }}/tsm configuration get -k install.component.samples --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_deploy_examples_status
+  failed_when: false
+
 - name: TABLEAU CONFIG | Configure Tableau Server to not deploy examples
   command: "{{ TSM_EXECUTABLE }}/tsm configuration set -k install.component.samples -v false --username {{ tableau_user }} --password {{ tableau_password }}"
-  when: not tsm_deploy_examples
+  when:
+    - not tsm_deploy_examples
+    - not "false" in tableau_deploy_examples_status.stdout
 
 - name: TABLEAU CONFIG | Apply pending changes
   command: "{{ TSM_EXECUTABLE }}/tsm pending-changes apply --username {{ tableau_user }} --password {{ tableau_password }}"
