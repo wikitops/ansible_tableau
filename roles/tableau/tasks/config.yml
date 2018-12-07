@@ -3,6 +3,7 @@
 - name: TABLEAU CONFIG | Get Tableau Server Manager executable
   shell: "ls {{ tsm_packages }} | grep customer"
   register: tsm
+  changed_when: false
 
 - name: TABLEAU CONFIG | Set facts for Tableau Server Manager executable
   set_fact:
