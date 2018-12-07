@@ -28,6 +28,7 @@ tableau_password: azertyuiop
 tableau_password_encrypted: "$6$26TGUbrC2UhUN7TC$6yxWcTb4tgJuuR4SQpbV7yEVpSSR092.lKp0kqomaB/MgVmjg7SAfnx/lmkNQytSkWUsxNbNdjYxGyvJX5olE."
 
 # Configuration
+tableau_data_dir: /var/opt/tableau/tableau_server
 tsm_packages: "/opt/tableau/tableau_server/packages"
 tsm_data_dir: /opt/tableau/tsm
 tsm_execute_args: "--accepteula"

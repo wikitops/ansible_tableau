@@ -28,3 +28,4 @@
   command: ./initialize-tsm {{ tsm_execute_args }} -f
   args:
     chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"
+    creates: "{{ tableau_data_dir }}"
