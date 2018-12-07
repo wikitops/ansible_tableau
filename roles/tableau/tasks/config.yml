@@ -11,9 +11,21 @@
   with_items:
     - "{{ tsm }}"
 
+- name: TABLEAU CONFIG | Check whether Identity store is set
+  command: "{{ TSM_EXECUTABLE }}/tsm user-identity-store list --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_list_identity_store
+
+- name: TABLEAU CONFIG | Get Licenses list
+  command: "{{ TSM_EXECUTABLE }}/tsm licenses list --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_list_licenses
+
 - name: TABLEAU CONFIG | Set Tableau Server licence
   command: "{{ TSM_EXECUTABLE }}/tsm licenses activate -k {{ tsm_licence }} --username {{ tableau_user }} --password {{ tableau_password }}"
-  when: tsm_licence != ""
+  when:
+    - tsm_licence != ""
+    - not tsm_licence in tableau_list_licenses.stdout
 
 - name: TABLEAU CONFIG | Get free trial Tableau Server licence
   command: "{{ TSM_EXECUTABLE }}/tsm licenses activate -t --username {{ tableau_user }} --password {{ tableau_password }}"
@@ -40,6 +52,8 @@
 
 - name: TABLEAU CONFIG | Configure Tableau Server identity stores
   command: "{{ TSM_EXECUTABLE }}/tsm settings import -f /tmp/tableau_identity_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
+  when:
+    - tableau_list_identity_store.stdout_lines | length == 0
 
 - name: TABLEAU CONFIG | Configure Tableau Server to not deploy examples
   command: "{{ TSM_EXECUTABLE }}/tsm configuration set -k install.component.samples -v false --username {{ tableau_user }} --password {{ tableau_password }}"
