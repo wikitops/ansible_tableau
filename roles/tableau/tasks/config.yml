@@ -51,7 +51,7 @@
 - name: TABLEAU CONFIG | Initialize Tableau Server (This may take some time)
   command: "{{ TSM_EXECUTABLE }}/tsm initialize --start-server --request-timeout 1800 --username {{ tableau_user }} --password {{ tableau_password }}"
   args:
-    creates: /tmp/tableau_init.done
+    creates: "{{tableau_data_dir }}/data/tabsvc/pgsql/"
 
 - name: TABLEAU CONFIG | Configure Tableau Server administrator user
   command: '{{ TSM_EXECUTABLE }}/tabcmd initialuser --server "localhost:80" --username "{{ tabcmd_admin_username }}" --password "{{ tabcmd_admin_password }}"'
