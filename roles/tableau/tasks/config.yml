@@ -38,9 +38,11 @@
     owner: "{{ tableau_user }}"
     group: "{{ tableau_user }}"
     mode: 0644
+  register: registration_template
 
 - name: TABLEAU CONFIG | Register Tableau Server
   command: "{{ TSM_EXECUTABLE }}/tsm register --file /tmp/tableau_registration_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
+  when: registration_template is changed
 
 - name: TABLEAU CONFIG | Copy Tableau Server identity stores
   template:
@@ -73,3 +75,4 @@
   failed_when:
     - tableau_initial_user_cmd.rc != 0
     - not "The server is already initialized" in tableau_initial_user_cmd.stderr
+  changed_when: tableau_initial_user_cmd.rc == 0
