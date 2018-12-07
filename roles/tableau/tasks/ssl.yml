@@ -10,7 +10,7 @@
 
 - name: TABLEAU SSL | Create reload helper
   template:
-    src: etc/tableaussl/reload_command.j2
+    src: etc/tableaussl/ssl_reload_helper.j2
     dest: /etc/tableaussl/reload_command
     owner: root
     group: root
