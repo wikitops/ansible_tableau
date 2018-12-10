@@ -3,6 +3,7 @@
 - name: TABLEAU CONFIG | Get Tableau Server Manager executable
   shell: "ls {{ tsm_packages }} | grep customer"
   register: tsm
+  changed_when: false
 
 - name: TABLEAU CONFIG | Set facts for Tableau Server Manager executable
   set_fact:
@@ -10,13 +11,27 @@
   with_items:
     - "{{ tsm }}"
 
+- name: TABLEAU CONFIG | Check whether Identity store is set
+  command: "{{ TSM_EXECUTABLE }}/tsm user-identity-store list --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_list_identity_store
+
+- name: TABLEAU CONFIG | Get Licenses list
+  command: "{{ TSM_EXECUTABLE }}/tsm licenses list --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_list_licenses
+
 - name: TABLEAU CONFIG | Set Tableau Server licence
   command: "{{ TSM_EXECUTABLE }}/tsm licenses activate -k {{ tsm_licence }} --username {{ tableau_user }} --password {{ tableau_password }}"
-  when: tsm_licence != ""
+  when:
+    - tsm_licence != ""
+    - not tsm_licence in tableau_list_licenses.stdout
+  register: tableau_set_licence_status
 
 - name: TABLEAU CONFIG | Get free trial Tableau Server licence
   command: "{{ TSM_EXECUTABLE }}/tsm licenses activate -t --username {{ tableau_user }} --password {{ tableau_password }}"
   when: tsm_licence == ""
+  register: tableau_set_free_licence_status
 
 - name: TABLEAU CONFIG | Copy Tableau Server registration file
   template:
@@ -25,9 +40,12 @@
     owner: "{{ tableau_user }}"
     group: "{{ tableau_user }}"
     mode: 0644
+  register: registration_template
 
 - name: TABLEAU CONFIG | Register Tableau Server
   command: "{{ TSM_EXECUTABLE }}/tsm register --file /tmp/tableau_registration_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
+  when: registration_template is changed
+  register: tableau_register_status
 
 - name: TABLEAU CONFIG | Copy Tableau Server identity stores
   template:
@@ -39,18 +57,44 @@
 
 - name: TABLEAU CONFIG | Configure Tableau Server identity stores
   command: "{{ TSM_EXECUTABLE }}/tsm settings import -f /tmp/tableau_identity_file.json --username {{ tableau_user }} --password {{ tableau_password }}"
+  when:
+    - tableau_list_identity_store.stdout_lines | length == 0
+  register: tableau_set_identity_store_status
+
+- name: TABLEAU CONFIG | Check deploy example status
+  command: "{{ TSM_EXECUTABLE }}/tsm configuration get -k install.component.samples --username {{ tableau_user }} --password {{ tableau_password }}"
+  changed_when: false
+  register: tableau_deploy_examples_status
+  failed_when: false
 
 - name: TABLEAU CONFIG | Configure Tableau Server to not deploy examples
   command: "{{ TSM_EXECUTABLE }}/tsm configuration set -k install.component.samples -v false --username {{ tableau_user }} --password {{ tableau_password }}"
-  when: not tsm_deploy_examples
+  when:
+    - not tsm_deploy_examples
+    - not "false" in tableau_deploy_examples_status.stdout
+  register: tableau_set_example_status
 
 - name: TABLEAU CONFIG | Apply pending changes
   command: "{{ TSM_EXECUTABLE }}/tsm pending-changes apply --username {{ tableau_user }} --password {{ tableau_password }}"
+  vars:
+    statuses:
+      - "{{ tableau_set_licence_status is changed }}"
+      - "{{ tableau_set_free_licence_status is changed }}"
+      - "{{ tableau_set_identity_store_status is changed }}"
+      - "{{ tableau_set_example_status is changed }}"
+    changed_statuses: "{{ statuses | reject('==',False) | list }}"
+    should_run: "{{ changed_statuses | length > 0 }}"
+  when: should_run
 
 - name: TABLEAU CONFIG | Initialize Tableau Server (This may take some time)
   command: "{{ TSM_EXECUTABLE }}/tsm initialize --start-server --request-timeout 1800 --username {{ tableau_user }} --password {{ tableau_password }}"
   args:
-    creates: /tmp/tableau_init.done
+    creates: "{{tableau_data_dir }}/data/tabsvc/pgsql/"
 
 - name: TABLEAU CONFIG | Configure Tableau Server administrator user
   command: '{{ TSM_EXECUTABLE }}/tabcmd initialuser --server "localhost:80" --username "{{ tabcmd_admin_username }}" --password "{{ tabcmd_admin_password }}"'
+  register: tableau_initial_user_cmd
+  failed_when:
+    - tableau_initial_user_cmd.rc != 0
+    - not "The server is already initialized" in tableau_initial_user_cmd.stderr
+  changed_when: tableau_initial_user_cmd.rc == 0

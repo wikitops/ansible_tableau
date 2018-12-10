@@ -15,6 +15,7 @@
 - name: TABLEAU INSTALL | Get Tableau TSM version
   shell: "ls {{ tsm_packages }} | grep scripts"
   register: tsm
+  changed_when: false
 
 - name: TABLEAU INSTALL | Fix systemd unit
   lineinfile:
@@ -28,3 +29,4 @@
   command: ./initialize-tsm {{ tsm_execute_args }} -f
   args:
     chdir: "{{ tsm_packages }}/{{ tsm.stdout }}"
+    creates: "{{ tableau_data_dir }}"
