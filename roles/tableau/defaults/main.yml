@@ -58,3 +58,4 @@ tabcmd_admin_password: DhnfIZen3dj3d9s2
 tableau_setup_ssl_helper: false
 tableau_ssl_certs_dir: "/etc/tableaussl/"
 tableau_ssl_key_ext: ".key.pem"
+tableau_ssl_key_ext: ".crt"
